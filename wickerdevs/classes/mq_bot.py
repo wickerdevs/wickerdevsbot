@@ -29,7 +29,7 @@ class MQBot(telegram.bot.Bot):
         OPTIONAL arguments'''
         return super(MQBot, self).send_message(*args, **kwargs)
 
-    def request_access(self, user, name, bot_id):
+    def request_access(self, user, name, bot_id, bot_name):
         users_str = secrets.get_var('DEVS')
         if isinstance(users_str, str):
             users_str = users_str.replace('[', '')
@@ -41,23 +41,19 @@ class MQBot(telegram.bot.Bot):
         else:
             users = users_str
         
-        bot = sheet.get_bot(bot_id)
-        if bot:
-            from wickerdevs.classes.forwarder_markup import CreateMarkup
-            text = request_access_text.format(user, name, bot.username)
-            success = False
-            for dev in users:
-                markup = CreateMarkup({
-                    f'ACCEPT:{user}:{name}:{bot_id}:{bot.username}': 'Accept',
-                    f'DECLINE:{user}:{name}:{bot_id}:{bot.username}': 'Decline'
-                }).create_markup()
-                try:
-                    self.send_queued_message(chat_id=dev, text=text, reply_markup=markup, parse_mode=ParseMode.HTML)
-                    success = True
-                except: pass
-            return success
-        else:
-            return False
+        from wickerdevs.classes.forwarder_markup import CreateMarkup
+        text = request_access_text.format(user, name, bot_name)
+        success = False
+        for dev in users:
+            markup = CreateMarkup({
+                f'ACCEPT:{user}:{name}:{bot_id}:{bot_name}': 'Accept',
+                f'DECLINE:{user}:{name}:{bot_id}:{bot_name}': 'Decline'
+            }).create_markup()
+            try:
+                self.send_queued_message(chat_id=dev, text=text, reply_markup=markup, parse_mode=ParseMode.HTML)
+                success = True
+            except: pass
+        return success
 
     def report_error(self, error=None, send_screenshot=False, screenshot_name=''):
         string = str(secrets.get_var('DEVS')).replace('[', '')
