@@ -32,16 +32,15 @@ class MQBot(telegram.bot.Bot):
     def request_access(self, user, name, bot_id):
         users_str = secrets.get_var('DEVS')
         if isinstance(users_str, str):
-            users_str.replace('[', '')
-            users_str.replace(']', '')
-            users_str.replace(' ', '')
+            users_str = users_str.replace('[', '')
+            users_str = users_str.replace(']', '')
+            users_str = users_str.replace(' ', '')
             users = users_str.split(',')
             for index, user in enumerate(users):
                 users[index] = int(user)
         else:
             users = users_str
         
-        name.replace(' ', '\\n')
         bot = sheet.get_bot(bot_id)
         if bot:
             from wickerdevs.classes.forwarder_markup import CreateMarkup
