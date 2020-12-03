@@ -15,7 +15,7 @@ def start_def(update:Update, context:CallbackContext):
     
     markup_dict = {}
     for bot in bots:
-        botlogger.debut(f'User id: {update.effective_chat.id} | bot.users: {bot.users}')
+        botlogger.debug(f'User id: {update.effective_chat.id} | bot.users: {bot.users}')
         if update.effective_chat.id not in bot.users:
             markup_dict[bot.bot_id] = bot.username
             available.append(bot)
@@ -45,7 +45,7 @@ def select_bot(update:Update, context:CallbackContext):
         return ConversationHandler.END
 
     # f'ACCEPT:{user}:{name}:{bot_id}:{bot.username}': 'Accept',
-    botlogger.debut(f'SELECT BOT: User {update.effective_chat.id}')
+    botlogger.debug(f'SELECT BOT: User {update.effective_chat.id}')
     result = context.bot.request_access(update.effective_chat.id, update.effective_user.full_name, id, bot.username)
     if result:
         send_message(update, context, request_sent.format(bot.username))
