@@ -29,7 +29,7 @@ class MQBot(telegram.bot.Bot):
         OPTIONAL arguments'''
         return super(MQBot, self).send_message(*args, **kwargs)
 
-    def request_access(self, user, name, bot_id, bot_name):
+    def request_access(self, user_id, name, bot_id, bot_name):
         users_str = secrets.get_var('DEVS')
         if isinstance(users_str, str):
             users_str = users_str.replace('[', '')
@@ -42,12 +42,14 @@ class MQBot(telegram.bot.Bot):
             users = users_str
         
         from wickerdevs.classes.forwarder_markup import CreateMarkup
-        text = request_access_text.format(user, name, bot_name)
+        text = request_access_text.format(user_id, name, bot_name)
         success = False
+        from wickerdevs import applogger
+        applogger.debug(f'request_access user_id: {user_id}')
         for dev in users:
             markup = CreateMarkup({
-                f'ACCEPT:{user}:{name}:{bot_id}:{bot_name}': 'Accept',
-                f'DECLINE:{user}:{name}:{bot_id}:{bot_name}': 'Decline'
+                f'ACCEPT:{user_id}:{name}:{bot_id}:{bot_name}': 'Accept',
+                f'DECLINE:{user_id}:{name}:{bot_id}:{bot_name}': 'Decline'
             }).create_markup()
             try:
                 self.send_queued_message(chat_id=dev, text=text, reply_markup=markup, parse_mode=ParseMode.HTML)
