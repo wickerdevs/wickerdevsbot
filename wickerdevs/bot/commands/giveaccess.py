@@ -2,6 +2,7 @@ from wickerdevs.bot.commands import *
 
 @send_typing_action
 def accept_bot_request(update:Update, context:CallbackContext):
+    from wickerdevs import applogger
     if not check_auth(update, context, admins=True, send=False):
         return
 
@@ -22,23 +23,24 @@ def accept_bot_request(update:Update, context:CallbackContext):
 
     # Notify Developer
     send_message(update, context, access_given_text.format(user_name, user_id, bot_username, bot_id), message_id=update.callback_query.inline_message_id)
-    botlogger.debug(f'Notified Developer {update.effective_chat.id}')
+    botlogger.applogger(f'Notified Developer {update.effective_chat.id}')
 
     # Notify User
     message_id = sheet.get_message(user_id)
     if message_id:
         try: 
-            botlogger.debug(f'Deleted Message for user {user_id}')
+            botlogger.applogger(f'Deleted Message for user {user_id}')
             context.bot.delete_message(chat_id=user_id, message_id=message_id)
         except: pass
     message = context.bot.send_message(chat_id=user_id, text=info_access_given_text.format(bot_username), parse_mode=ParseMode.HTML)
-    botlogger.debug(f'Sent Message to user {user_id}')
+    botlogger.applogger(f'Sent Message to user {user_id}')
     sheet.set_message(user_id, message.message_id)
     return
 
 
 @send_typing_action
 def decline_bot_request(update:Update, context:CallbackContext):
+    from wickerdevs import applogger
     if not check_auth(update, context, admins=True, send=False):
         return
 

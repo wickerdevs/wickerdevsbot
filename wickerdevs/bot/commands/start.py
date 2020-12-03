@@ -1,8 +1,10 @@
 from wickerdevs.bot.commands import *
 
 
+
 @send_typing_action
 def start_def(update:Update, context:CallbackContext):
+    from wickerdevs import applogger
     if check_auth(update, context, admins=True, send=False):
         update.effective_chat.send_message(text=user_is_admin_no_start_text)
         try: update.message.delete()
@@ -15,7 +17,7 @@ def start_def(update:Update, context:CallbackContext):
     
     markup_dict = {}
     for bot in bots:
-        botlogger.debug(f'User id: {update.effective_chat.id} | bot.users: {bot.users}')
+        applogger.debug(f'User id: {update.effective_chat.id} | bot.users: {bot.users}')
         if update.effective_chat.id not in bot.users:
             markup_dict[bot.bot_id] = bot.username
             available.append(bot)
@@ -32,6 +34,7 @@ def start_def(update:Update, context:CallbackContext):
 
 @send_typing_action
 def select_bot(update:Update, context:CallbackContext):
+    from wickerdevs import applogger
     data = update.callback_query.data
     if data == Callbacks.CANCEL:
         return cancel_start(update, context)
@@ -45,7 +48,7 @@ def select_bot(update:Update, context:CallbackContext):
         return ConversationHandler.END
 
     # f'ACCEPT:{user}:{name}:{bot_id}:{bot.username}': 'Accept',
-    botlogger.debug(f'SELECT BOT: User {update.effective_chat.id}')
+    applogger.debug(f'SELECT BOT: User {update.effective_chat.id}')
     result = context.bot.request_access(update.effective_chat.id, update.effective_user.full_name, id, bot.username)
     if result:
         send_message(update, context, request_sent.format(bot.username))
