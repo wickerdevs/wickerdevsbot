@@ -6,6 +6,7 @@ from wickerdevs.bot.commands.addbot import *
 from wickerdevs.bot.commands.giveaccess import *
 from wickerdevs.bot.commands.help import *
 from wickerdevs.bot.commands.incorrect import *
+from wickerdevs.bot.commands.myid import *
 from wickerdevs.classes.callbacks import *
 from wickerdevs.bot import *
 import re
@@ -39,6 +40,7 @@ def setup(updater:Updater):
     dp.add_handler(CommandHandler("help", help_def))
     dp.add_handler(CallbackQueryHandler(accept_bot_request, pattern='ACCEPT'))
     dp.add_handler(CallbackQueryHandler(decline_bot_request, pattern='DECLINE'))
+    dp.add_handler(CommandHandler('myid', myid_def))
     dp.add_handler(start_handler)
     dp.add_handler(addbot_handler)
     dp.add_handler(MessageHandler(Filters.text, incorrect_command))

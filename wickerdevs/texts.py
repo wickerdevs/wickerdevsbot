@@ -1,3 +1,7 @@
+# ID INFO
+id_info_text = '<b>USER INFO</b>\nYour Telegram id is <b>{}</b>'
+
+
 # START COMMAND
 user_is_admin_no_start_text = 'As you are the admin of this bot, there is no need to use /start'
 select_bot_text = 'Select below the bot you would like to request access for:'
